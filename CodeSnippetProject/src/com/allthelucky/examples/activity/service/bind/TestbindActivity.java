@@ -1,4 +1,4 @@
-package com.allthelucky.examples.activity.service;
+package com.allthelucky.examples.activity.service.bind;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,16 +10,14 @@ public class TestbindActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("==================");
-
+        MessageSendManager.setEnable(true);
+        
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 try {
                     Thread.sleep(2 * 1000);
-                    InfoManager.setEnable(true);
-                    InfoManager.showInfo();
+                    MessageSendManager.showInfo();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
