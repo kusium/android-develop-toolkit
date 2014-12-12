@@ -26,7 +26,7 @@ public class CommonEditText extends LinearLayout{
 	
 	private void init(Context context, AttributeSet attrs){
 		View parentView = LayoutInflater.from(context).inflate(R.layout.com_edittext_item, null);
-		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		addView(parentView, params);
 		TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.com_edittext);
 		String title = typedArray.getString(R.styleable.com_edittext_title);

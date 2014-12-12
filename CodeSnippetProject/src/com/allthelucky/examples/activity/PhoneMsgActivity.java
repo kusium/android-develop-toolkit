@@ -10,7 +10,7 @@ import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 
-public class PhomeMsgActivity extends Activity {
+public class PhoneMsgActivity extends Activity {
 
     private Button button;
 
