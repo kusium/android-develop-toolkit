@@ -44,7 +44,7 @@ public class PackageUtils {
 		return ret;
 	}
 	
-	public static final String getAndroidBuildModel() {
+	public static final String getAndroidModel() {
 		try {
 			return URLEncoder.encode(Build.MODEL, "UTF-8");
 		} catch (UnsupportedEncodingException e) {

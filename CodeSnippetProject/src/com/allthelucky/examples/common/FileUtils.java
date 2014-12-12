@@ -7,17 +7,24 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import android.content.Context;
 import android.os.Environment;
@@ -41,7 +48,150 @@ public class FileUtils {
 			.getExternalStorageDirectory().getPath()
 			+ File.separator
 			+ "driver.ini";
+	
+	/**
+	 * Get MD5 of one file:hex string,test OK!
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static String getFileMD5(File file) {
+		if (!file.exists() || !file.isFile()) {
+			return null;
+		}
+		MessageDigest digest = null;
+		FileInputStream in = null;
+		byte buffer[] = new byte[1024];
+		int len;
+		try {
+			digest = MessageDigest.getInstance("MD5");
+			in = new FileInputStream(file);
+			while ((len = in.read(buffer, 0, 1024)) != -1) {
+				digest.update(buffer, 0, len);
+			}
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		BigInteger bigInt = new BigInteger(1, digest.digest());
+		return bigInt.toString(16);
+	}
 
+	/**
+	 * copy assets文件到指定目录。
+	 * 
+	 * @param context
+	 *            Context
+	 * @param assetName
+	 *            assetName
+	 * @param saveFilePath
+	 */
+	public static void copyAssetsFile(Context context, String assetName,
+			String saveFilePath) {
+		try {
+			final File file = new File(saveFilePath);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+ 
+			InputStream is = context.getResources().getAssets().open(assetName);
+			FileOutputStream fos = new FileOutputStream(saveFilePath);
+			byte[] buffer = new byte[7168];
+			int count = 0;
+			while ((count = is.read(buffer)) > 0) {
+				fos.write(buffer, 0, count);
+			}
+ 
+			fos.close();
+			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+ 
+	public static void copyRawFile( Context context, int rawid, String dbname) {
+		File file = context.getDatabasePath(dbname);
+		if (file.exists()) {
+			return;
+		}
+ 
+		byte[] buf = new byte[1024];
+		try {
+			InputStream is=context.getResources().openRawResource(rawid);
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdir();
+				file.createNewFile();
+			}
+			FileOutputStream os = new FileOutputStream(file);
+			int count = -1;
+			while ((count = is.read(buf)) != -1) {
+				os.write(buf, 0, count);
+			}
+			is.close();
+			os.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			buf = null;
+		}
+	}
+	
+	/**
+	 * 解压文件到指定目录
+	 * 
+	 * @param sourcePath
+	 * @param targetDirPath
+	 * @author isea533
+	 */
+	public static void unZipFiles(final String sourcePath, String targetDirPath) {
+		ZipFile zip = null;
+		try {
+			zip = new ZipFile(new File(sourcePath));
+			for (Enumeration<?> entries = zip.entries(); entries
+					.hasMoreElements();) {
+				ZipEntry entry = (ZipEntry) entries.nextElement();
+				String zipEntryName = entry.getName();
+				InputStream in = zip.getInputStream(entry);
+				String outPath = (targetDirPath + File.separator + zipEntryName)
+						.replaceAll("\\*", "/");
+				// 判断路径是否存在,不存在则创建文件路径
+				File file = new File(outPath.substring(0,
+						outPath.lastIndexOf('/')));
+				if (!file.exists()) {
+					file.mkdirs();
+				}
+				// 判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压
+				if (new File(outPath).isDirectory()) {
+					continue;
+				}
+ 
+				System.out.println("outPath:" + outPath);
+				OutputStream out = new FileOutputStream(outPath);
+				byte[] buf1 = new byte[1024];
+				int len;
+				while ((len = in.read(buf1)) > 0) {
+					out.write(buf1, 0, len);
+				}
+ 
+				in.close();
+				out.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (zip != null) {
+					zip.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+ 
 	/**
 	 * 写文本文件 在Android系统中，文件保存在 /data/data/PACKAGE_NAME/files 目录下
 	 * 
