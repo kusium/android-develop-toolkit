@@ -149,15 +149,27 @@ public class ResourceUtils {
 		if (packageNameR == null) {
 			packageNameR = DEFAULT_PKG_NAME;
 		}
-		if ((resType != null) && (resName != null))
+		if ((resType != null) && (resName != null)) {
+			String resourceName = resName;
+			if (resourceName.startsWith("R.")) {
+				try {
+					int len = resourceName.lastIndexOf(".");
+					if (len != -1) {
+						resourceName = resourceName.substring(len + 1).replace(" ", "");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			try {
 				Class<?> localClass = Class.forName(packageNameR + "$" + resType);
-				Field localField = localClass.getField(resName);
+				Field localField = localClass.getField(resourceName);
 				Object localObject = localField.get(localClass.newInstance());
 				return Integer.parseInt(localObject.toString());
 			} catch (Exception localException) {
 				localException.printStackTrace();
 			}
+		}
 		return -1;
 	}
 }
