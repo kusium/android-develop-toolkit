@@ -31,17 +31,28 @@
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="com.allthelucky.examples" >
     </instrumentation>
+    
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <uses-sdk android:minSdkVersion="8" 
-        android:targetSdkVersion="18"/>
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+        
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
 
     <application
+        android:allowBackup="true"
+        android:name="com.allthelucky.examples.ExampleApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <uses-library android:name="android.test.runner" />
 
+        <service android:name="com.allthelucky.examples.floatbar.FloatBarService"
+              android:process=":persistent" >
+        </service>
+
         <activity
-            android:name="com.allthelucky.examples.view.viewgroup.ViewGroupActivity"
+            android:name="com.allthelucky.examples.activity.FloatButtonActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,7 +75,6 @@
             </intent-filter>
         </activity-alias>
 
-
         <!-- servicebind -->
         <service android:name="com.winfirm.examples.activity.service.InfoService" >
             <intent-filter>
@@ -75,7 +85,8 @@
         </service>
 
         <!-- service -->
-        <service android:name="com.winfirm.examples.activity.service.CheckService"
+        <service
+            android:name="com.winfirm.examples.activity.service.CheckService"
             android:enabled="true" />
 
         <!-- broadcast -->
