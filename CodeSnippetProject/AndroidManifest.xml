@@ -19,7 +19,6 @@
     <!-- sdcard -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!-- phone -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -34,8 +33,6 @@
     
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-        
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
@@ -57,7 +54,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
