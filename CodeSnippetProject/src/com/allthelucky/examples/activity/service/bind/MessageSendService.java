@@ -12,7 +12,7 @@ import android.util.Log;
 public class MessageSendService extends Service implements IMessageSender {
     private static final String TAG = "InfoService";
     private boolean enable = false;
-    ServiceBinder binder = new ServiceBinder();
+    private ServiceBinder binder = new ServiceBinder();
 
     @Override
     public IBinder onBind(Intent intent) {
